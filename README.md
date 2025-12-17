@@ -126,13 +126,13 @@ Loading db.json
 Done
 
 Resources
-http://localhost:3001/users
-http://localhost:3001/customers
-http://localhost:3001/packages
-http://localhost:3001/transactions
+http://localhost:5000/users
+http://localhost:5000/customers
+http://localhost:5000/packages
+http://localhost:5000/transactions
 
 Home
-http://localhost:3001
+http://localhost:5000
 ```
 
 **Jangan tutup terminal ini! ** JSON Server harus tetap berjalan. 
