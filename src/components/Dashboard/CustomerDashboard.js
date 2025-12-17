@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Card, Statistic, Table, Tag, Empty } from 'antd';
+import { Row, Col, Card, Statistic, Table, Tag, Empty, Button } from 'antd';
 import {
   ShoppingCartOutlined,
   CheckCircleOutlined,
   ClockCircleOutlined,
+  ShoppingOutlined,
+  FireOutlined,
+  TrophyOutlined,
 } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTransactions } from '../../hooks/useTransactions';
+import { usePackages } from '../../hooks/usePackages';
 import dayjs from 'dayjs';
 import './Dashboard.css';
 
 const CustomerDashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { transactions, loading } = useTransactions(user?.customerId);
+  const { packages } = usePackages();
   const [stats, setStats] = useState({
     totalPurchases: 0,
     totalSpent: 0,
@@ -35,22 +42,23 @@ const CustomerDashboard = () => {
     }
   }, [transactions]);
 
+  // Get top 3 popular packages
+  const popularPackages = packages.slice(0, 3);
+  
+  // Get recent 5 transactions
+  const recentTransactions = transactions.slice(0, 5);
+
   const columns = [
     {
       title: 'Tanggal',
-      dataIndex: 'purchaseDate',
+      dataIndex:  'purchaseDate',
       key: 'purchaseDate',
-      render: (date) => dayjs(date).format('DD/MM/YYYY HH:mm'),
+      render: (date) => dayjs(date).format('DD/MM/YYYY'),
     },
     {
       title: 'Paket',
       dataIndex: 'packageName',
-      key:  'packageName',
-    },
-    {
-      title: 'Kuota',
-      dataIndex: 'quota',
-      key: 'quota',
+      key: 'packageName',
     },
     {
       title: 'Harga',
@@ -59,20 +67,7 @@ const CustomerDashboard = () => {
       render: (amount) => `Rp ${amount.toLocaleString('id-ID')}`,
     },
     {
-      title: 'Metode Pembayaran',
-      dataIndex: 'paymentMethod',
-      key: 'paymentMethod',
-      render: (method) => {
-        const labels = {
-          'e-wallet': 'E-Wallet',
-          'transfer': 'Transfer Bank',
-          'credit-card': 'Kartu Kredit',
-        };
-        return labels[method] || method;
-      },
-    },
-    {
-      title: 'Status',
+      title:  'Status',
       dataIndex: 'status',
       key: 'status',
       render: (status) => {
@@ -96,10 +91,25 @@ const CustomerDashboard = () => {
 
   return (
     <div className="dashboard-container fade-in">
-      <h1 className="page-title">Dashboard Customer</h1>
-      <p className="welcome-text">Selamat datang, {user?.name}!</p>
+      {/* Welcome Section */}
+      <div className="welcome-section">
+        <div>
+          <h1 className="page-title">Selamat Datang, {user?.name}!  👋</h1>
+          <p className="welcome-text">Temukan paket data terbaik untuk kebutuhan internet Anda</p>
+        </div>
+        <Button 
+          type="primary" 
+          size="large" 
+          icon={<ShoppingOutlined />}
+          onClick={() => navigate('/packages')}
+          className="cta-button"
+        >
+          Beli Paket Sekarang
+        </Button>
+      </div>
       
-      <Row gutter={[16, 16]}>
+      {/* Stats Cards */}
+      <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         <Col xs={24} sm={8}>
           <Card className="stat-card card-hover">
             <Statistic
@@ -127,28 +137,102 @@ const CustomerDashboard = () => {
               title="Transaksi Pending"
               value={stats.activePurchases}
               prefix={<ClockCircleOutlined />}
-              valueStyle={{ color:  '#fa8c16' }}
+              valueStyle={{ color: '#fa8c16' }}
             />
           </Card>
         </Col>
       </Row>
 
+      {/* Popular Packages Section */}
       <Card 
-        title="Riwayat Pembelian" 
+        title={
+          <span>
+            <FireOutlined style={{ color: '#ff4d4f', marginRight: 8 }} />
+            Paket Populer
+          </span>
+        }
+        extra={
+          <Button type="link" onClick={() => navigate('/packages')}>
+            Lihat Semua →
+          </Button>
+        }
+        className="popular-packages-card"
+        style={{ marginBottom: 24 }}
+      >
+        <Row gutter={[16, 16]}>
+          {popularPackages.map((pkg, index) => (
+            <Col xs={24} sm={8} key={pkg.id}>
+              <Card 
+                className="mini-package-card card-hover"
+                hoverable
+              >
+                <div className="mini-package-header">
+                  {index === 0 && <TrophyOutlined style={{ color: '#ffd700', fontSize: 24 }} />}
+                  <Tag color={index === 0 ? 'gold' : index === 1 ? 'blue' : 'green'}>
+                    #{index + 1} Terlaris
+                  </Tag>
+                </div>
+                <h3 className="mini-package-name">{pkg.name}</h3>
+                <div className="mini-package-info">
+                  <div className="mini-quota">
+                    <strong>{pkg.quota}</strong>
+                    <span>Kuota</span>
+                  </div>
+                  <div className="mini-price">
+                    <strong>Rp {pkg.price.toLocaleString('id-ID')}</strong>
+                    <span>{pkg.duration}</span>
+                  </div>
+                </div>
+                <Button 
+                  type="primary" 
+                  block 
+                  onClick={() => navigate('/packages')}
+                  style={{ marginTop: 12 }}
+                >
+                  Beli Sekarang
+                </Button>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Card>
+
+      {/* Transaction History */}
+      <Card 
+        title="Riwayat Pembelian Terakhir" 
         className="purchase-history"
-        style={{ marginTop: '24px' }}
+        extra={
+          transactions.length > 5 && (
+            <Button type="link" onClick={() => navigate('/transactions')}>
+              Lihat Semua →
+            </Button>
+          )
+        }
       >
         {transactions.length > 0 ? (
           <Table
             columns={columns}
-            dataSource={transactions}
+            dataSource={recentTransactions}
             rowKey="id"
-            pagination={{ pageSize: 10 }}
-            scroll={{ x:  1000 }}
+            pagination={false}
+            scroll={{ x: 600 }}
             loading={loading}
           />
         ) : (
-          <Empty description="Belum ada transaksi" />
+          <Empty 
+            description={
+              <span>
+                Belum ada transaksi.  <br />
+                <Button 
+                  type="link" 
+                  onClick={() => navigate('/packages')}
+                  style={{ padding: 0 }}
+                >
+                  Mulai belanja sekarang! 
+                </Button>
+              </span>
+            }
+          />
         )}
       </Card>
     </div>

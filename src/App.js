@@ -5,9 +5,9 @@ import { AuthProvider } from './contexts/AuthContext';
 import PrivateRoute from './components/Auth/PrivateRoute';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import Customers from './pages/Customers';
-import Packages from './pages/Packages';
-import Transactions from './pages/Transactions';
+import Customers from './pages/Customer';
+import Packages from './pages/Package';
+import Transactions from './pages/Transaction';
 import './App.css';
 
 function App() {
