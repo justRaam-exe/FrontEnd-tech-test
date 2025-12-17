@@ -1,47 +1,65 @@
-import React, { useState, useEffect } from 'react';
-import { Row, Col, Card, Statistic, Table, Tag, Empty } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Card, Row, Col, Statistic, Table, Tag, message } from 'antd';
 import {
+  DollarOutlined,
   ShoppingCartOutlined,
-  CheckCircleOutlined,
   ClockCircleOutlined,
 } from '@ant-design/icons';
-import { useAuth } from './src/contexts/AuthContext';
-import { useTransactions } from './src/hooks/useTransactions';
-import dayjs from 'dayjs';
-import './Dashboard.css';
+import { useAuth } from '../../context/authContext';
+import api from '../../service/api';
+import './dashboard.css';
 
-const CustomerDashboard = () => {
+function CustomerDashboard() {
   const { user } = useAuth();
-  const { transactions, loading } = useTransactions(user?.customerId);
   const [stats, setStats] = useState({
     totalPurchases: 0,
     totalSpent: 0,
-    activePurchases: 0,
+    pendingTransactions: 0,
   });
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (transactions.length > 0) {
-      const totalSpent = transactions
-        .filter(t => t.status === 'success')
-        .reduce((sum, t) => sum + t.amount, 0);
+    if (user?.customerId) {
+      fetchCustomerData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.customerId]);
+
+  const fetchCustomerData = async () => {
+    try {
+      setLoading(true);
       
-      const activePurchases = transactions.filter(t => t.status === 'pending').length;
+      // Fetch customer transactions
+      const response = await api.get(`/transactions? customerId=${user.customerId}`);
+      const customerTransactions = response.data || [];
+
+      // Calculate stats
+      const successTransactions = customerTransactions.filter((t) => t.status === 'success');
+      const pendingTransactions = customerTransactions.filter((t) => t.status === 'pending');
+      const totalSpent = successTransactions.reduce((sum, t) => sum + (t.amount || 0), 0);
 
       setStats({
-        totalPurchases: transactions.length,
+        totalPurchases: successTransactions.length,
         totalSpent,
-        activePurchases,
+        pendingTransactions: pendingTransactions.length,
       });
+
+      // Sort by date descending
+      const sorted = customerTransactions.sort(
+        (a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate)
+      );
+      
+      setTransactions(sorted);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching customer data:', error);
+      message.error('Gagal memuat data');
+      setLoading(false);
     }
-  }, [transactions]);
+  };
 
   const columns = [
-    {
-      title: 'Tanggal',
-      dataIndex: 'purchaseDate',
-      key: 'purchaseDate',
-      render: (date) => dayjs(date).format('DD/MM/YYYY HH:mm'),
-    },
     {
       title: 'Paket',
       dataIndex: 'packageName',
@@ -53,106 +71,95 @@ const CustomerDashboard = () => {
       key: 'quota',
     },
     {
-      title: 'Harga',
+      title:  'Harga',
       dataIndex: 'amount',
       key: 'amount',
-      render: (amount) => `Rp ${amount.toLocaleString('id-ID')}`,
+      render: (amount) => `Rp ${amount?.toLocaleString('id-ID') || 0}`,
     },
     {
       title: 'Metode Pembayaran',
       dataIndex: 'paymentMethod',
       key: 'paymentMethod',
       render: (method) => {
-        const labels = {
+        const methodMap = {
           'e-wallet': 'E-Wallet',
-          'transfer': 'Transfer Bank',
+          'transfer':  'Transfer Bank',
           'credit-card': 'Kartu Kredit',
         };
-        return labels[method] || method;
+        return methodMap[method] || method;
       },
     },
     {
-      title: 'Status',
+      title:  'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (status) => {
-        const colors = {
-          success: 'green',
-          pending: 'orange',
-          failed: 'red',
-        };
-        const icons = {
-          success: <CheckCircleOutlined />,
-          pending: <ClockCircleOutlined />,
-        };
-        return (
-          <Tag icon={icons[status]} color={colors[status]}>
-            {status.toUpperCase()}
-          </Tag>
-        );
-      },
+      render: (status) => (
+        <Tag color={status === 'success' ? 'green' :  status === 'pending' ? 'orange' : 'red'}>
+          {status?.toUpperCase() || 'UNKNOWN'}
+        </Tag>
+      ),
+    },
+    {
+      title: 'Tanggal',
+      dataIndex: 'purchaseDate',
+      key:  'purchaseDate',
+      render: (date) => new Date(date).toLocaleDateString('id-ID'),
     },
   ];
 
   return (
-    <div className="dashboard-container fade-in">
-      <h1 className="page-title">Dashboard Customer</h1>
-      <p className="welcome-text">Selamat datang, {user?.name}!</p>
-      
+    <div className="dashboard-container">
+      <h1 className="page-title">Dashboard Saya</h1>
+      <p className="welcome-text">Halo, {user?.name}! Berikut adalah ringkasan aktivitas Anda.</p>
+
+      {/* Statistics Cards */}
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={8}>
-          <Card className="stat-card card-hover">
+          <Card className="stat-card">
+            <ShoppingCartOutlined className="stat-icon" style={{ color: '#1890ff' }} />
             <Statistic
               title="Total Pembelian"
               value={stats.totalPurchases}
-              prefix={<ShoppingCartOutlined />}
               valueStyle={{ color: '#1890ff' }}
             />
           </Card>
         </Col>
         <Col xs={24} sm={8}>
-          <Card className="stat-card card-hover">
+          <Card className="stat-card">
+            <DollarOutlined className="stat-icon" style={{ color: '#3f8600' }} />
             <Statistic
               title="Total Pengeluaran"
               value={stats.totalSpent}
-              prefix="Rp"
               valueStyle={{ color: '#3f8600' }}
+              prefix="Rp"
               formatter={(value) => value.toLocaleString('id-ID')}
             />
           </Card>
         </Col>
         <Col xs={24} sm={8}>
-          <Card className="stat-card card-hover">
+          <Card className="stat-card">
+            <ClockCircleOutlined className="stat-icon" style={{ color: '#faad14' }} />
             <Statistic
               title="Transaksi Pending"
-              value={stats.activePurchases}
-              prefix={<ClockCircleOutlined />}
-              valueStyle={{ color:  '#fa8c16' }}
+              value={stats.pendingTransactions}
+              valueStyle={{ color:  '#faad14' }}
             />
           </Card>
         </Col>
       </Row>
 
-      <Card 
-        title="Riwayat Pembelian" 
-        className="purchase-history"
-        style={{ marginTop: '24px' }}
-      >
-        {transactions.length > 0 ? (
-          <Table
-            columns={columns}
-            dataSource={transactions}
-            rowKey="id"
-            pagination={{ pageSize: 10 }}
-            scroll={{ x:  1000 }}
-            loading={loading}
-          />
-        ) : (
-          <Empty description="Belum ada transaksi" />
-        )}
+      {/* Transaction History */}
+      <Card title="Riwayat Pembelian" className="purchase-history" style={{ marginTop:  '24px' }}>
+        <Table
+          columns={columns}
+          dataSource={transactions}
+          loading={loading}
+          rowKey="id"
+          pagination={{ pageSize: 10 }}
+        />
       </Card>
     </div>
   );
-};
+}
 
 export default CustomerDashboard;

@@ -1,158 +1,173 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Card, Table, Statistic, Tag, Spin } from 'antd';
+import { Card, Row, Col, Statistic, Table, Tag, message } from 'antd';
 import {
-    ShoppingOutlined,
-    UserOutlined,
-    DollarOutlined,
-    RiseOutlined,
+  DollarOutlined,
+  ShoppingCartOutlined,
+  UserOutlined,
+  CheckCircleOutlined,
 } from '@ant-design/icons';
-import { useTransactions } from '../../hook/useTransaction';
-import { useCustomers } from '../../hook/useCustomer';
-import dayjs from 'dayjs';
-import './dashboard.css'
+import api from '../../service/api';
+import './dashboard.css';
 
-const AdminDashboard = () => {
-    const { transaction, loading: txLoading } = useTransactions();
-    const { customers, loading: custLoading } = useCustomers();
-    const [stats, setStats] = useState({
-        totalRevenue: 0,
-        totalTransactions: 0,
-        totalCustomers: 0,
-        successRate: 0,
-    });
+function AdminDashboard() {
+  const [stats, setStats] = useState({
+    totalRevenue: 0,
+    totalTransactions: 0,
+    totalCustomers: 0,
+    successRate: 0,
+  });
+  const [recentTransactions, setRecentTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        if (transaction.length > 0) {
-            const totalRevenue = transaction
-                .filter(t => t.status === 'success')
-                .reduce((sum, t) => sum + t.amount, 0);
-            
-            const successTransactions = transaction.filter(t => t.status === 'success').length;
-            const successRate = (successTransactions / transaction.length) * 100;
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
 
-            setStats({
-                totalRevenue,
-                totalTransactions: transaction.length,
-                totalCustomers: customers.length,
-                successRate: successRate.toFixed(1),
-            });
-        }
-    }, [transaction, customers]);
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      
+      // Fetch all data
+      const [transactionsRes, customersRes] = await Promise.all([
+        api.get('/transactions'),
+        api.get('/customers'),
+      ]);
 
-    const recentTransactions = transaction.slice(0, 5);
+      const transactions = transactionsRes.data || [];
+      const customers = customersRes.data || [];
 
-    const columns = [
-        {
-            title: 'Tanggal',
-            dataIndex: 'purchaseDate',
-            key: 'purchaseDate',
-            render: (date) => dayjs(date).format('DD/MM/YYYY HH:mm'),
-        },
-        {
-            title: 'Customer',
-            dataIndex: 'customerName',
-            key: 'customerName',
-        },
-        {
-            title: 'Paket',
-            dataIndex: 'packageName',
-            key: 'packageName',
-        },
-        {
-            title: 'Jumlah',
-            dataIndex: 'amount',
-            key: 'amount',
-            render: (amount) => `Rp ${amount.toLocaleString('id-ID')}`,
-        },
-        {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-            render: (status) => {
-                const colors = {
-                    success: 'green',
-                    pending: 'yellow',
-                    failed: 'red',
-                };
-                return <Tag color={colors[status]}>{status.toUpperCase()}</Tag>;
-            },
-        },
-    ];
+      // Calculate stats
+      const successTransactions = transactions.filter((t) => t.status === 'success');
+      const totalRevenue = successTransactions.reduce((sum, t) => sum + (t.amount || 0), 0);
+      const successRate = transactions.length > 0 
+        ? ((successTransactions.length / transactions.length) * 100).toFixed(1)
+        : 0;
 
-    if (txLoading || custLoading) {
-        return (
-            <div style={{ textAlign: 'center', padding: '50px' }}>
-                <Spin size="large" />
-            </div>
-        );
+      setStats({
+        totalRevenue,
+        totalTransactions: transactions.length,
+        totalCustomers:  customers.length,
+        successRate,
+      });
+
+      // Get recent 5 transactions
+      const recent = transactions
+        .sort((a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate))
+        .slice(0, 5);
+      
+      setRecentTransactions(recent);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+      message.error('Gagal memuat data dashboard');
+      setLoading(false);
     }
+  };
 
-    return (
-        <div className="dashboard-container fade-in">
-            <h1 className="page-title">Dashboard Admin</h1>
+  const columns = [
+    {
+      title: 'Customer',
+      dataIndex: 'customerName',
+      key: 'customerName',
+    },
+    {
+      title: 'Paket',
+      dataIndex: 'packageName',
+      key: 'packageName',
+    },
+    {
+      title: 'Kuota',
+      dataIndex: 'quota',
+      key: 'quota',
+    },
+    {
+      title: 'Harga',
+      dataIndex: 'amount',
+      key: 'amount',
+      render: (amount) => `Rp ${amount?.toLocaleString('id-ID') || 0}`,
+    },
+    {
+      title:  'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status) => (
+        <Tag color={status === 'success' ?  'green' : status === 'pending' ? 'orange' : 'red'}>
+          {status?.toUpperCase() || 'UNKNOWN'}
+        </Tag>
+      ),
+    },
+    {
+      title: 'Tanggal',
+      dataIndex: 'purchaseDate',
+      key: 'purchaseDate',
+      render: (date) => new Date(date).toLocaleDateString('id-ID'),
+    },
+  ];
 
-            <Row gutter={[16, 16]}>
-                <Col xs={24} sm={12} md={6}>
-                    <Card className="stat-card card-hover">
-                        <Statistic
-                            title="Total Revenue"
-                            value={stats.totalRevenue}
-                            prefix="Rp"
-                            suffix=""
-                            valueStyle={{ color: '#3f8600' }}
-                            formatter={(value) => value.toLocaleString('id-ID')}
-                        />
-                        <DollarOutlined className="stat-icon" style={{ color: '#3f8600' }} />
-                    </Card>
-                </Col>
-                <Col xs={24} sm={12} md={6}>
-                    <Card className="stat-card card-hover">
-                        <Statistic
-                            title="Total Transaksi"
-                            value={stats.totalTransactions}
-                            prefix={<ShoppingOutlined />}
-                            valueStyle={{ color: '#1890ff' }}
-                        />
-                    </Card>
-                </Col>
-                <Col xs={24} sm={12} md={6}>
-                    <Card className="stat-card card-hover">
-                        <Statistic
-                            title="Total Customers"
-                            value={stats.totalCustomers}
-                            prefix={<UserOutlined />}
-                            valueStyle={{ color: '#722ed1' }}
-                        />
-                    </Card>
-                </Col>
-                <Col xs={24} sm={12} md={6}>
-                    <Card className="stat-card card-hover">
-                        <Statistic
-                            title="Success Rate"
-                            value={stats.successRate}
-                            prefix={<RiseOutlined />}
-                            suffix="%"
-                            valueStyle={{ color: '#52c41a' }}
-                        />
-                    </Card>
-                </Col>
-            </Row>
+  return (
+    <div className="dashboard-container">
+      <h1 className="page-title">Admin Dashboard</h1>
+      <p className="welcome-text">Selamat datang!  Berikut adalah ringkasan sistem Anda. </p>
 
-            <Card 
-                title="Transaksi Terbaru"
-                className="recent-transactions"
-                style={{ marginTop: '24px'}}
-            >
-                <Table
-                    columns={columns}
-                    dataSource={recentTransactions}
-                    rowKey="id"
-                    pagination={false}
-                    scroll={{ x: 800 }}
-                />
-            </Card>
-        </div>
-    )
+      {/* Statistics Cards */}
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={12} lg={6}>
+          <Card className="stat-card">
+            <DollarOutlined className="stat-icon" style={{ color: '#3f8600' }} />
+            <Statistic
+              title="Total Revenue"
+              value={stats.totalRevenue}
+              valueStyle={{ color: '#3f8600' }}
+              prefix="Rp"
+              formatter={(value) => value.toLocaleString('id-ID')}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <Card className="stat-card">
+            <ShoppingCartOutlined className="stat-icon" style={{ color: '#1890ff' }} />
+            <Statistic
+              title="Total Transaksi"
+              value={stats.totalTransactions}
+              valueStyle={{ color: '#1890ff' }}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <Card className="stat-card">
+            <UserOutlined className="stat-icon" style={{ color: '#722ed1' }} />
+            <Statistic
+              title="Total Customers"
+              value={stats.totalCustomers}
+              valueStyle={{ color: '#722ed1' }}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <Card className="stat-card">
+            <CheckCircleOutlined className="stat-icon" style={{ color: '#52c41a' }} />
+            <Statistic
+              title="Success Rate"
+              value={stats.successRate}
+              suffix="%"
+              valueStyle={{ color: '#52c41a' }}
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Recent Transactions */}
+      <Card title="Transaksi Terbaru" className="recent-transactions" style={{ marginTop: '24px' }}>
+        <Table
+          columns={columns}
+          dataSource={recentTransactions}
+          loading={loading}
+          rowKey="id"
+          pagination={false}
+        />
+      </Card>
+    </div>
+  );
 }
 
 export default AdminDashboard;
