@@ -161,7 +161,7 @@ Aplikasi akan otomatis terbuka di browser:  **http://localhost:3000**
 
 ### 🔍 Cek Apakah Sudah Berjalan dengan Benar
 
-1. **Cek JSON Server**: Buka http://localhost:3000/users di browser
+1. **Cek JSON Server**: Buka http://localhost:5000/users di browser
    - Harus muncul data JSON users
    
 2. **Cek React App**: Buka http://localhost:3000
