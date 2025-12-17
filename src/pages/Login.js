@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Card } from 'antd';
 import { UserOutlined, LockOutlined, ShoppingOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './Login.css';
 
@@ -81,6 +81,13 @@ const Login = () => {
             </Button>
           </Form.Item>
         </Form>
+        
+        <div className="login-footer">
+          <p>
+            Belum punya akun? {' '}
+            <Link to="/register">Daftar di sini</Link>
+          </p>
+        </div>
 
         <div className="login-demo-info">
           <h4>Demo Credentials: </h4>

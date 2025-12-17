@@ -119,6 +119,29 @@
   box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
 }
 
+.login-footer {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.login-footer p {
+  color:  #666;
+  margin: 0;
+}
+
+.login-footer a {
+  color: #1890ff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+}
+
 .login-demo-info {
   margin-top: 24px;
   padding: 16px;
