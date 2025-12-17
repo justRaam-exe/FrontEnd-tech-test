@@ -1,0 +1,265 @@
+.package-container {
+  padding:  8px;
+}
+
+.package-header {
+  margin-bottom: 24px;
+}
+
+.package-card {
+  border-radius: 16px;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.package-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.package-icon {
+  font-size: 32px;
+  color: #1890ff;
+}
+
+.package-name {
+  font-size: 20px;
+  font-weight: bold;
+  margin:  0 0 8px 0;
+  color: #333;
+}
+
+.package-description {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 16px;
+  min-height: 40px;
+}
+
+.package-details {
+  display: grid;
+  grid-template-columns:  1fr 1fr;
+  gap: 16px;
+  padding: 16px;
+  background:  linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.package-quota,
+.package-duration {
+  text-align: center;
+  color: white;
+}
+
+.quota-value,
+.duration-value {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.quota-label,
+.duration-label {
+  display: block;
+  font-size: 12px;
+  opacity: 0.9;
+  margin-top: 4px;
+}
+
+.package-benefits {
+  margin-bottom: 16px;
+  flex:  1;
+}
+
+.package-benefits h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #555;
+}
+
+.package-footer {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.package-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.price-label {
+  color: #666;
+  font-size: 14px;
+}
+
+.price-value {
+  font-size:  24px;
+  font-weight: bold;
+  color:  #1890ff;
+}
+
+.buy-button {
+  border-radius: 8px;
+  height: 44px;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .package-name {
+    font-size: 18px;
+  }
+  
+  .price-value {
+    font-size: 20px;
+  }
+}
+
+.package-container {
+  padding:  8px;
+}
+
+.package-header {
+  margin-bottom: 24px;
+}
+
+.package-card {
+  border-radius: 16px;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.package-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.package-icon {
+  font-size: 32px;
+  color: #1890ff;
+}
+
+.package-name {
+  font-size: 20px;
+  font-weight: bold;
+  margin:  0 0 8px 0;
+  color: #333;
+}
+
+.package-description {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 16px;
+  min-height: 40px;
+}
+
+.package-details {
+  display: grid;
+  grid-template-columns:  1fr 1fr;
+  gap: 16px;
+  padding: 16px;
+  background:  linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.package-quota,
+.package-duration {
+  text-align: center;
+  color: white;
+}
+
+.quota-value,
+.duration-value {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.quota-label,
+.duration-label {
+  display: block;
+  font-size: 12px;
+  opacity: 0.9;
+  margin-top: 4px;
+}
+
+.package-benefits {
+  margin-bottom: 16px;
+  flex:  1;
+}
+
+.package-benefits h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #555;
+}
+
+.package-footer {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.package-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.price-label {
+  color: #666;
+  font-size: 14px;
+}
+
+.price-value {
+  font-size:  24px;
+  font-weight: bold;
+  color:  #1890ff;
+}
+
+.buy-button {
+  border-radius: 8px;
+  height: 44px;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .package-name {
+    font-size: 18px;
+  }
+  
+  .price-value {
+    font-size: 20px;
+  }
+}

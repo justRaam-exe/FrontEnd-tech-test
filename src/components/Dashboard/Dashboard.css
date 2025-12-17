@@ -1,0 +1,56 @@
+. dashboard-container {
+  padding: 8px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.welcome-text {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #1890ff, #722ed1);
+}
+
+.stat-icon {
+  position: absolute;
+  right: 24px;
+  top: 24px;
+  font-size:  32px;
+  opacity: 0.2;
+}
+
+.recent-transactions,
+.purchase-history {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 24px;
+  }
+  
+  .stat-icon {
+    display: none;
+  }
+}

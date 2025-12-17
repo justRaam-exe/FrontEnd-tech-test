@@ -1,14 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
-import { AuthProvider } from './context/authContext';
-import PrivateRoute from './component/auth/privateRoute';
-import MainLayout from './component/layout/mainLayout';
-import Login from './page/login';
-import Dashboard from './page/dashboard';
-import Customer from './page/customer';
-import Package from './page/package';
-import Transaction from './page/transaction';
+import { AuthProvider } from './contexts/AuthContext';
+import PrivateRoute from './components/Auth/PrivateRoute';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import Customers from './pages/Customers';
+import Packages from './pages/Packages';
+import Transactions from './pages/Transactions';
 import './App.css';
 
 function App() {
@@ -24,41 +23,40 @@ function App() {
       <AuthProvider>
         <Router>
           <Routes>
-            {/* Public Route */}
             <Route path="/login" element={<Login />} />
-            
-            {/* Protected Routes with MainLayout */}
             <Route
-              path="/*"
+              path="/dashboard"
               element={
                 <PrivateRoute>
-                  <MainLayout />
+                  <Dashboard />
                 </PrivateRoute>
               }
-            >
-              {/* Nested routes */}
-              <Route path="dashboard" element={<Dashboard />} />
-              
-              {/* Admin-only route */}
-              <Route 
-                path="customer" 
-                element={
-                  <PrivateRoute adminOnly>
-                    <Customer />
-                  </PrivateRoute>
-                } 
-              />
-              
-              {/* Public (untuk semua logged-in users) */}
-              <Route path="package" element={<Package />} />
-              <Route path="transaction" element={<Transaction />} />
-              
-              {/* Default redirect */}
-              <Route path="" element={<Navigate to="/dashboard" replace />} />
-            </Route>
-
-            {/* Fallback */}
-            <Route path="*" element={<Navigate to="/login" replace />} />
+            />
+            <Route
+              path="/customers"
+              element={
+                <PrivateRoute adminOnly>
+                  <Customers />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/packages"
+              element={
+                <PrivateRoute>
+                  <Packages />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/transactions"
+              element={
+                <PrivateRoute>
+                  <Transactions />
+                </PrivateRoute>
+              }
+            />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </Router>
       </AuthProvider>
