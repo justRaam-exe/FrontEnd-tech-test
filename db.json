@@ -28,6 +28,16 @@
       "email": "siti@example.com",
       "phone": "081234567892",
       "customerId": 2
+    },
+    {
+      "username": "akubram",
+      "password": "bram123",
+      "role": "customer",
+      "name": "yohanes bramanta",
+      "email": "bram@keren.com",
+      "phone": "0812341541",
+      "customerId": 3,
+      "id": 4
     }
   ],
   "customers": [
@@ -48,6 +58,15 @@
       "address": "Jl. Gatot Subroto No. 45, Jakarta Selatan",
       "registeredDate": "2025-02-10",
       "status": "active"
+    },
+    {
+      "name": "yohanes bramanta",
+      "email": "bram@keren.com",
+      "phone": "0812341541",
+      "address": "Jalan Aku bahagia bersamamu. no 30",
+      "registeredDate": "2025-12-17",
+      "status": "active",
+      "id": 3
     }
   ],
   "packages": [
@@ -221,6 +240,30 @@
       "purchaseDate": "2025-12-17T15:01:36.345Z",
       "status": "success",
       "id": 6
+    },
+    {
+      "customerId": 2,
+      "customerName": "Siti Rahayu",
+      "packageId": 5,
+      "packageName": "Paket Bulanan 20GB",
+      "quota": "20GB",
+      "amount": 80000,
+      "paymentMethod": "transfer",
+      "purchaseDate": "2025-12-17T15:39:55.876Z",
+      "status": "success",
+      "id": 7
+    },
+    {
+      "customerId": 3,
+      "customerName": "yohanes bramanta",
+      "packageId": 7,
+      "packageName": "Paket Bulanan Unlimited",
+      "quota": "Unlimited",
+      "amount": 200000,
+      "paymentMethod": "credit-card",
+      "purchaseDate": "2025-12-17T20:06:05.684Z",
+      "status": "success",
+      "id": 8
     }
   ]
 }
