@@ -6,14 +6,14 @@ import {
     DollarOutlined,
     RiseOutlined,
 } from '@ant-design/icons';
-import { useTransaction } from './src/hook/useTransaction';
-import { useCustomer } from './src/hook/useCustomer';
+import { useTransactions } from '../../hook/useTransaction';
+import { useCustomers } from '../../hook/useCustomer';
 import dayjs from 'dayjs';
 import './dashboard.css'
 
 const AdminDashboard = () => {
-    const { transaction, loading: txLoading } = useTransaction();
-    const { customers, loading: custLoading } = useCustomer();
+    const { transaction, loading: txLoading } = useTransactions();
+    const { customers, loading: custLoading } = useCustomers();
     const [stats, setStats] = useState({
         totalRevenue: 0,
         totalTransactions: 0,

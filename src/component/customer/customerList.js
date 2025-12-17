@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Button, Space, Popcornfirm, Input, Tag, Card } from 'antd';
+import { Table, Button, Space, Popconfirm, Input, Tag, Card } from 'antd';
 import {
     PlusOutlined,
     EditOutlined,
@@ -7,13 +7,13 @@ import {
     SearchOutlined,
     UserOutlined,
 } from '@ant-design/icons';
-import { useCustomer } from './src/useCustomer';
+import { useCustomers } from '../../hook/useCustomer';
 import CustomerModal from './customerModal';
 import dayjs from 'dayjs';
 import './customer.css';
 
 const CustomerList = () => {
-    const { customers, loading, addCustomer, updateCustomer, deleteCustomer } = useCustomer();
+    const { customers, loading, addCustomer, updateCustomer, deleteCustomer } = useCustomers();
     const [modalVisible, setModalVisible] = useState(false);
     const [editingCustomer, setEditingCustomer] = useState(null);
     const [searchText, setSearchText] = useState('');
@@ -48,7 +48,7 @@ const CustomerList = () => {
 
     const filteredCustomers = customers.filter(customer => 
         customer.name.toLowerCase().includes(searchText.toLowerCase()) ||
-        customer.email.toLowerCase().includes(searchText.toLowercase()) ||
+        customer.email.toLowerCase().includes(searchText.toLowerCase()) ||
         customer.phone.includes(searchText)
     );
 
@@ -115,7 +115,7 @@ const CustomerList = () => {
                         size="small"
                         onClick={() => handleEdit(record)}
                     />
-                    <Popcornfirm
+                    <Popconfirm
                         title="Apakah anda ingin menghapus customer ini?"
                         description="Data yang dihapus tidak dapat dikembalikan"
                         onConfirm={() => handleDelete(record.id)}
@@ -127,7 +127,7 @@ const CustomerList = () => {
                             icon={<DeleteOutlined />}
                             size="small"
                         />    
-                    </Popcornfirm> 
+                    </Popconfirm> 
                 </Space>
             ),
         },
@@ -143,7 +143,7 @@ const CustomerList = () => {
                     </div>
                     <Button
                         type="primary"
-                        icion={<PlusOutlined />}
+                        icon={<PlusOutlined />}
                         onClick={handleAdd}
                         size="large"
                     >

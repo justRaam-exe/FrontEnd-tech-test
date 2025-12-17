@@ -5,8 +5,8 @@ import {
     ShoppingCartOutlined,
     CheckCircleOutlined,
 } from '@ant-design/icons';
-import { useAuth } from './page/src/contexts/AuthContext';
-import { useTransaction } from './src/hooks/useTransactions';
+import { useAuth } from '../../context/authContext';
+import { useTransactions } from '../../hook/useTransaction';
 import dayjs from 'dayjs';
 import './transaction.css';
 
@@ -15,7 +15,7 @@ const { Option } = Select;
 
 const TransactionList = () => {
     const { user, isAdmin } = useAuth();
-    const { transactions, loading } = useTransaction(isAdmin ? null : user?.customerId);
+    const { transactions, loading } = useTransactions(isAdmin ? null : user?.customerId);
     const [searchText, setSearchText] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [dateRange, setDateRange] = useState(null);

@@ -11,7 +11,7 @@ import {
     UserOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from './src/context/authContext';
+import { useAuth } from '../../context/authContext';
 import './mainLayout.css';
 
 const { Header, Sider, Content } = Layout;
