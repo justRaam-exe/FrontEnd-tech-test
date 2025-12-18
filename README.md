@@ -3,7 +3,7 @@
 ---
 
 ## You can Access about the ERD, UseCase dagram, User flow diagram and Wireframe in the link below
-![Drive](https://drive.google.com/drive/folders/1aq91waPRXyqvKcA199dqMy3Pj2swqmw_?usp=sharing)
+[Google Drive](https://drive.google.com/drive/folders/1aq91waPRXyqvKcA199dqMy3Pj2swqmw_?usp=sharing)
 
 ---
 
