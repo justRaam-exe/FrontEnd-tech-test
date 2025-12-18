@@ -264,6 +264,42 @@
       "purchaseDate": "2025-12-17T20:06:05.684Z",
       "status": "success",
       "id": 8
+    },
+    {
+      "customerId": 3,
+      "customerName": "yohanes bramanta",
+      "packageId": 6,
+      "packageName": "Paket Bulanan 50GB",
+      "quota": "50GB",
+      "amount": 150000,
+      "paymentMethod": "e-wallet",
+      "purchaseDate": "2025-12-18T06:15:40.151Z",
+      "status": "success",
+      "id": 9
+    },
+    {
+      "customerId": 3,
+      "customerName": "yohanes bramanta",
+      "packageId": 5,
+      "packageName": "Paket Bulanan 20GB",
+      "quota": "20GB",
+      "amount": 80000,
+      "paymentMethod": "e-wallet",
+      "purchaseDate": "2025-12-18T08:22:06.537Z",
+      "status": "success",
+      "id": 10
+    },
+    {
+      "customerId": 3,
+      "customerName": "yohanes bramanta",
+      "packageId": 6,
+      "packageName": "Paket Bulanan 50GB",
+      "quota": "50GB",
+      "amount": 150000,
+      "paymentMethod": "e-wallet",
+      "purchaseDate": "2025-12-18T08:24:58.225Z",
+      "status": "success",
+      "id": 11
     }
   ]
 }

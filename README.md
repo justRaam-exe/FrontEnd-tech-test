@@ -1,10 +1,9 @@
 # 🛒 DataKom E-Commerce - Sistem Pembelian Paket Data Internet
 
-Website e-commerce modern untuk pembelian paket data internet dengan fitur lengkap manajemen customer, katalog paket, dan transaksi. 
+---
 
-![React](https://img.shields.io/badge/React-18.2.0-blue)
-![Ant Design](https://img.shields.io/badge/Ant%20Design-5.12.0-1890ff)
-![JSON Server](https://img.shields.io/badge/JSON%20Server-0.17.4-green)
+## You can Access about the ERD, UseCase dagram, User flow diagram and Wireframe in the link below
+![Drive](https://drive.google.com/drive/folders/1aq91waPRXyqvKcA199dqMy3Pj2swqmw_?usp=sharing)
 
 ---
 
