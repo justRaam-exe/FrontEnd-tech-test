@@ -114,8 +114,8 @@ const TransactionList = () => {
 
   return (
     <div className="transaction-container fade-in">
-      <h1 className="page-title">Manajemen Transaksi</h1>
-      <p className="page-subtitle">Kelola dan monitor transaksi</p>
+      <h1 className="page-title">Transaction History</h1>
+      <p className="page-subtitle">History of your data package purchases</p>
 
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         <Col xs={24} sm={8}>
